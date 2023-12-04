@@ -37,7 +37,7 @@ public class WeatherClient {
 
     public WeatherResponse getWeatherData(double lat, double lon, String metric) throws WeatherDataFetchException {
         HttpClient client = HttpClient.newHttpClient();
-        String url = BASE_URL + "?lat=" + lat + "&lon=" + lon + "&appid=" + "&units=" + metric + API_KEY;
+        String url = BASE_URL + "?lat=" + lat + "&lon=" + lon + "&units=" + metric + "&appid=" +  API_KEY;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .build();
@@ -63,12 +63,9 @@ public class WeatherClient {
 
             // Parsing current weather
             JsonNode currentNode = rootNode.path("current");
-            if(currentNode.isArray()) {
-                CurrentForecast currentForecast = objectMapper.readValue(
-                        currentNode.toString(),
-                        new TypeReference<>() {}
-                );
-                weatherResponse.setCurrent(currentForecast);
+            if (!currentNode.isMissingNode()) {
+                CurrentForecast currentWeather = objectMapper.treeToValue(currentNode, CurrentForecast.class);
+                weatherResponse.setCurrent(currentWeather);
             }
 
             // Parsing hourly forecasts

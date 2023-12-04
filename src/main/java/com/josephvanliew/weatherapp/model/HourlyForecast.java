@@ -8,25 +8,26 @@ import java.util.Optional;
 
 public record HourlyForecast(
         long dt, // Unix timestamp for the forecast time
-        double temp, // Temperature
+        double temp, // Kalvin default
         @JsonProperty("feels_like")
         double feelsLike, // Feels like temperature
         int pressure, // Atmospheric pressure in hPa
-        int humidity, // Humidity in percentage
+        int humidity, //Humidity %
         @JsonProperty("dew_point")
-        double dewPoint, // Dew point temperature
+        double dewPoint, //  Atmospheric temperature (varying according to pressure and humidity) below which water droplets begin to condense and dew can form. Units – default: kelvin, metric: Celsius, imperial: Fahrenheit.
         double uvi, // UV index
         int clouds, // Cloudiness in percentage
         int visibility, // Average visibility in meters
         @JsonProperty("wind_speed")
         double windSpeed, // Wind speed
         @JsonProperty("wind_deg")
-        int windDeg, // Wind direction in degrees
+        int windDeg, // Wind direction, degrees (meteorological)
         @JsonProperty("wind_gust")
         double windGust, // Wind gust speed
         List<WeatherCondition> weather, // Weather conditions
         double pop, // Probability of precipitation
-        Rain rain
+        Rain rain, // Precipitation, mm/h. Please note that only mm/h as units of measurement are available for this parameter
+        Snow snow //Precipitation, mm/h. Please note that only mm/h as units of measurement are available for this parameter
 ) {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -40,8 +41,11 @@ public record HourlyForecast(
 
     public record Rain(
             @JsonProperty("1h")
-            Optional<Double> amountInLastHour // Amount of rain in the last hour
+            double amountInLastHour // Amount of rain in the last hour
     ) {}
 
-
+    public record Snow(
+            @JsonProperty("1h")
+            double amountInLastHour // Amount of snow in the last hour
+    ) {}
 }

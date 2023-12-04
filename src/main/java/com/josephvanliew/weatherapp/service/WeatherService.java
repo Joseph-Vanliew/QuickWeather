@@ -16,6 +16,7 @@ public class WeatherService {
     private final GeocodingClient geocodingClient;
     private final WeatherClient weatherAPIClient;
 
+    private final String metric = "imperial";
     @Autowired
     public WeatherService(GeocodingClient geocodingClient, WeatherClient weatherAPIClient) {
         this.geocodingClient = geocodingClient;
@@ -33,8 +34,7 @@ public class WeatherService {
 
     public WeatherResponse getCompleteWeatherData(String city) {
         Coordinates coordinates = getCoordinatesForCity(city);
-        String metric = "metric";
-        return weatherAPIClient.getWeatherData(coordinates.lat(), coordinates.lon(), metric);
+        return weatherAPIClient.getWeatherData(coordinates.lat(), coordinates.lon(), this.metric);
     }
 }
 

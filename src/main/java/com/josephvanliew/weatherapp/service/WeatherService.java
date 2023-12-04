@@ -14,13 +14,13 @@ import java.util.Optional;
 public class WeatherService {
 
     private final GeocodingClient geocodingClient;
-    private final WeatherClient weatherAPIClient;
+    private final WeatherClient weatherClient;
 
-    private final String metric = "imperial";
+    private final String imperial = "imperial";
     @Autowired
     public WeatherService(GeocodingClient geocodingClient, WeatherClient weatherAPIClient) {
         this.geocodingClient = geocodingClient;
-        this.weatherAPIClient = weatherAPIClient;
+        this.weatherClient = weatherAPIClient;
     }
 
     private Coordinates getCoordinatesForCity(String city) {
@@ -34,7 +34,7 @@ public class WeatherService {
 
     public WeatherResponse getCompleteWeatherData(String city) {
         Coordinates coordinates = getCoordinatesForCity(city);
-        return weatherAPIClient.getWeatherData(coordinates.lat(), coordinates.lon(), this.metric);
+        return weatherClient.getWeatherData(coordinates.lat(), coordinates.lon(), this.imperial);
     }
 }
 

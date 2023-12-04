@@ -44,7 +44,7 @@ public class WeatherClient {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200) {
-                return parseWeatherResponse(response.body());
+                return parseWeatherResponse(response.body(), lat, lon);
             } else {
                 logger.error("Failed to fetch the weather data for the given Lat: " + lat + ", and longitude: " + lon + ", status code: " + response.statusCode() + ", response body: " + response.body());
             }
@@ -54,12 +54,15 @@ public class WeatherClient {
         return null;
     }
 
-    private WeatherResponse parseWeatherResponse(String responseBody) throws WeatherParserException {
+    private WeatherResponse parseWeatherResponse(String responseBody, double lat, double lon) throws WeatherParserException {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(responseBody);
 
             WeatherResponse weatherResponse = new WeatherResponse();
+
+            weatherResponse.setLat(lat);
+            weatherResponse.setLon(lon);
 
             // Parsing current weather
             JsonNode currentNode = rootNode.path("current");
@@ -79,7 +82,7 @@ public class WeatherClient {
             }
 
             // Parsing daily forecasts
-            JsonNode dailyNode = rootNode.path("daily");
+            JsonNode dailyNode = rootNode.path("daily"); //3 day forecast
             if (dailyNode.isArray()) {
                 List<DailyForecast> dailyForecasts = objectMapper.readValue(
                         dailyNode.toString(),
@@ -89,7 +92,7 @@ public class WeatherClient {
             }
 
             // Parsing weather alerts
-            JsonNode alertsNode = rootNode.path("alerts");
+            JsonNode alertsNode = rootNode.path("alerts"); //weather alerts/advisories
             if (alertsNode.isArray()) {
                 List<WeatherAlert> weatherAlerts = objectMapper.readValue(
                         alertsNode.toString(),

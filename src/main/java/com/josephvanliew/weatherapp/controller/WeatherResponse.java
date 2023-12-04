@@ -13,6 +13,9 @@ public class WeatherResponse {
     private List<DailyForecast> daily;
     private List<WeatherAlert> alerts;
 
+    private double lat;
+    private double lon;
+
     public CurrentForecast getCurrent() {
         return current;
     }
@@ -43,5 +46,21 @@ public class WeatherResponse {
 
     public void setAlerts(List<WeatherAlert> alerts) {
         this.alerts = alerts;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 }

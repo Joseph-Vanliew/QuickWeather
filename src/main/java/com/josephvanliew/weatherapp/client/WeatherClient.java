@@ -5,10 +5,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.josephvanliew.weatherapp.controller.WeatherResponse;
+import com.josephvanliew.weatherapp.customexceptions.WeatherDataFetchException;
+import com.josephvanliew.weatherapp.customexceptions.WeatherParserException;
 import com.josephvanliew.weatherapp.model.CurrentForecast;
 import com.josephvanliew.weatherapp.model.DailyForecast;
 import com.josephvanliew.weatherapp.model.HourlyForecast;
 import com.josephvanliew.weatherapp.model.WeatherAlert;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +22,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
+
 
 @Component
 public class WeatherClient {
@@ -27,7 +32,9 @@ public class WeatherClient {
     @Value("${WEATHER_BASE_URL}")
     private String BASE_URL;
 
-    public WeatherResponse getWeatherData(double lat, double lon) {
+    private static final Logger logger = LoggerFactory.getLogger(WeatherClient.class);
+
+    public WeatherResponse getWeatherData(double lat, double lon) throws WeatherDataFetchException {
         HttpClient client = HttpClient.newHttpClient();
         String url = BASE_URL + "?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY;
 
@@ -39,15 +46,15 @@ public class WeatherClient {
             if (response.statusCode() == 200) {
                 return parseWeatherResponse(response.body());
             } else {
-                // handle later
+                logger.error("Weather API returned non-200 status code: " + response.statusCode());
             }
         } catch (IOException | InterruptedException e) {
-            // Log and handle exception
+            logger.error("Error occurred while calling Weather API", e);
         }
-        return null; // or throw an exception
+        throw new WeatherDataFetchException("Failed to fetch Weather data");
     }
 
-    private WeatherResponse parseWeatherResponse(String responseBody) {
+    private WeatherResponse parseWeatherResponse(String responseBody) throws WeatherParserException {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(responseBody);
@@ -57,7 +64,7 @@ public class WeatherClient {
             // Parsing current weather
             JsonNode currentNode = rootNode.path("current");
             if(currentNode.isArray()) {
-                List<CurrentForecast> currentForecast = objectMapper.readValue(
+                CurrentForecast currentForecast = objectMapper.readValue(
                         currentNode.toString(),
                         new TypeReference<>() {}
                 );
@@ -67,7 +74,7 @@ public class WeatherClient {
             // Parsing hourly forecasts
             JsonNode hourlyNode = rootNode.path("hourly");
             if (hourlyNode.isArray()) {
-                List<HourlyForecast> hourlyForecasts = objectMapper.readValue(
+                HourlyForecast hourlyForecasts = objectMapper.readValue(
                         hourlyNode.toString(),
                         new TypeReference<>() {}
                 );
@@ -77,7 +84,7 @@ public class WeatherClient {
             // Parsing daily forecasts
             JsonNode dailyNode = rootNode.path("daily");
             if (dailyNode.isArray()) {
-                List<DailyForecast> dailyForecasts = objectMapper.readValue(
+                DailyForecast dailyForecasts = objectMapper.readValue(
                         dailyNode.toString(),
                         new TypeReference<>() {}
                 );
@@ -87,7 +94,7 @@ public class WeatherClient {
             // Parsing weather alerts
             JsonNode alertsNode = rootNode.path("alerts");
             if (alertsNode.isArray()) {
-                List<WeatherAlert> weatherAlerts = objectMapper.readValue(
+                WeatherAlert weatherAlerts = objectMapper.readValue(
                         alertsNode.toString(),
                         new TypeReference<>() {}
                 );
@@ -96,9 +103,8 @@ public class WeatherClient {
 
             return weatherResponse;
         } catch (JsonProcessingException e) {
-            // Log and handle parsing exception
+            logger.error("Error occurred while parsing Weather API response", e);
+            throw new WeatherParserException("Failed to parse weather data", e);
         }
-        return null; // or throw an exception
     }
-
 }

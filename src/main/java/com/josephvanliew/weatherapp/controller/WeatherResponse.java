@@ -8,40 +8,40 @@ import com.josephvanliew.weatherapp.model.WeatherAlert;
 import java.util.List;
 
 public class WeatherResponse {
-    private List<CurrentForecast> current;
-    private List<HourlyForecast> hourly;
-    private List<DailyForecast> daily;
-    private List<WeatherAlert> alerts;
+    private CurrentForecast current;
+    private HourlyForecast hourly;
+    private DailyForecast daily;
+    private WeatherAlert alerts;
 
-    public List<CurrentForecast> getCurrent() {
+    public CurrentForecast getCurrent() {
         return current;
     }
 
-    public void setCurrent(List<CurrentForecast> current) {
+    public void setCurrent(CurrentForecast current) {
         this.current = current;
     }
 
-    public List<HourlyForecast> getHourly() {
+    public HourlyForecast getHourly() {
         return hourly;
     }
 
-    public void setHourly(List<HourlyForecast> hourly) {
+    public void setHourly(HourlyForecast hourly) {
         this.hourly = hourly;
     }
 
-    public List<DailyForecast> getDaily() {
+    public DailyForecast getDaily() {
         return daily;
     }
 
-    public void setDaily(List<DailyForecast> daily) {
+    public void setDaily(DailyForecast daily) {
         this.daily = daily;
     }
 
-    public List<WeatherAlert> getAlerts() {
+    public WeatherAlert getAlerts() {
         return alerts;
     }
 
-    public void setAlerts(List<WeatherAlert> alerts) {
+    public void setAlerts(WeatherAlert alerts) {
         this.alerts = alerts;
     }
 }

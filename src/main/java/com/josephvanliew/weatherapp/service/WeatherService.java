@@ -14,36 +14,12 @@ import java.util.Optional;
 public class WeatherService {
 
     private final GeocodingClient geocodingClient;
-    private final WeatherClient weatherClient;
+    private final WeatherClient weatherAPIClient;
 
     @Autowired
-    public WeatherService(GeocodingClient geocodingClient, WeatherClient weatherClient) {
+    public WeatherService(GeocodingClient geocodingClient, WeatherClient weatherAPIClient) {
         this.geocodingClient = geocodingClient;
-        this.weatherClient = weatherClient;
-    }
-
-    public List<CurrentForecast> getCurrentWeather(String city) {
-        Coordinates coordinates = getCoordinatesForCity(city);
-        WeatherResponse weatherResponse = weatherClient.getWeatherData(coordinates.lat(), coordinates.lon());
-        return weatherResponse.getCurrent();
-    }
-
-    public List<HourlyForecast> getHourlyForecast(String city) {
-        Coordinates coordinates = getCoordinatesForCity(city);
-        WeatherResponse weatherResponse = weatherClient.getWeatherData(coordinates.lat(), coordinates.lon());
-        return weatherResponse.getHourly();
-    }
-
-    public List<DailyForecast> getDailyForecast(String city) {
-        Coordinates coordinates = getCoordinatesForCity(city);
-        WeatherResponse weatherResponse = weatherClient.getWeatherData(coordinates.lat(), coordinates.lon());
-        return weatherResponse.getDaily();
-    }
-
-    public List<WeatherAlert> getWeatherAlerts(String city) {
-        Coordinates coordinates = getCoordinatesForCity(city);
-        WeatherResponse weatherResponse = weatherClient.getWeatherData(coordinates.lat(), coordinates.lon());
-        return weatherResponse.getAlerts();
+        this.weatherAPIClient = weatherAPIClient;
     }
 
     private Coordinates getCoordinatesForCity(String city) {
@@ -51,8 +27,13 @@ public class WeatherService {
         if (coordinates.isPresent()) {
             return coordinates.get();
         } else {
-            throw new RuntimeException("Unable to find weather for the given city.");
+            throw new RuntimeException("Unable to find weather data for the given city.");
         }
+    }
+
+    public WeatherResponse getCompleteWeatherData(String city) {
+        Coordinates coordinates = getCoordinatesForCity(city);
+        return weatherAPIClient.getWeatherData(coordinates.lat(), coordinates.lon());
     }
 }
 

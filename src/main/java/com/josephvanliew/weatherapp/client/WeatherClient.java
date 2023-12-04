@@ -46,7 +46,7 @@ public class WeatherClient {
             if (response.statusCode() == 200) {
                 return parseWeatherResponse(response.body());
             } else {
-                logger.error("Weather API returned non-200 status code: " + response.statusCode());
+                logger.error("Failed to fetch the weather data for the given Lat: " + lat + ", and longitude: " + lon + ", status code: " + response.statusCode() + ", response body: " + response.body());
             }
         } catch (IOException | InterruptedException e) {
             logger.error("Error occurred while calling Weather API", e);
@@ -103,8 +103,8 @@ public class WeatherClient {
 
             return weatherResponse;
         } catch (JsonProcessingException e) {
-            logger.error("Error occurred while parsing Weather API response", e);
-            throw new WeatherParserException("Failed to parse weather data", e);
+            logger.error("Error occurred while parsing Weather API response: ", e);
+            throw new WeatherParserException("Failed to parse weather data: ", e);
         }
     }
 }

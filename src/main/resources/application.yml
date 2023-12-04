@@ -1,0 +1,3 @@
+WEATHER_API_KEY: "a599dd7a4d6eba2ac2584d7cb9847fd4"
+GEOCODING_BASE_URL: "http://api.openweathermap.org/geo/1.0/direct"
+WEATHER_BASE_URL: "https://api.openweathermap.org/data/3.0/onecall"

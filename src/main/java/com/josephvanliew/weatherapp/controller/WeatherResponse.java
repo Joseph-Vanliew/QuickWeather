@@ -9,9 +9,9 @@ import java.util.List;
 
 public class WeatherResponse {
     private CurrentForecast current;
-    private HourlyForecast hourly;
-    private DailyForecast daily;
-    private WeatherAlert alerts;
+    private List<HourlyForecast> hourly;
+    private List<DailyForecast> daily;
+    private List<WeatherAlert> alerts;
 
     public CurrentForecast getCurrent() {
         return current;
@@ -21,27 +21,27 @@ public class WeatherResponse {
         this.current = current;
     }
 
-    public HourlyForecast getHourly() {
+    public List<HourlyForecast> getHourly() {
         return hourly;
     }
 
-    public void setHourly(HourlyForecast hourly) {
+    public void setHourly(List<HourlyForecast> hourly) {
         this.hourly = hourly;
     }
 
-    public DailyForecast getDaily() {
+    public List<DailyForecast> getDaily() {
         return daily;
     }
 
-    public void setDaily(DailyForecast daily) {
+    public void setDaily(List<DailyForecast> daily) {
         this.daily = daily;
     }
 
-    public WeatherAlert getAlerts() {
+    public List<WeatherAlert> getAlerts() {
         return alerts;
     }
 
-    public void setAlerts(WeatherAlert alerts) {
+    public void setAlerts(List<WeatherAlert> alerts) {
         this.alerts = alerts;
     }
 }

@@ -22,6 +22,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 
 @Component
@@ -34,10 +35,9 @@ public class WeatherClient {
 
     private static final Logger logger = LoggerFactory.getLogger(WeatherClient.class);
 
-    public WeatherResponse getWeatherData(double lat, double lon) throws WeatherDataFetchException {
+    public WeatherResponse getWeatherData(double lat, double lon, String metric) throws WeatherDataFetchException {
         HttpClient client = HttpClient.newHttpClient();
-        String url = BASE_URL + "?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY;
-
+        String url = BASE_URL + "?lat=" + lat + "&lon=" + lon + "&appid=" + "&units=" + metric + API_KEY;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .build();
@@ -51,7 +51,7 @@ public class WeatherClient {
         } catch (IOException | InterruptedException e) {
             logger.error("Error occurred while calling Weather API", e);
         }
-        throw new WeatherDataFetchException("Failed to fetch Weather data");
+        return null;
     }
 
     private WeatherResponse parseWeatherResponse(String responseBody) throws WeatherParserException {
@@ -74,7 +74,7 @@ public class WeatherClient {
             // Parsing hourly forecasts
             JsonNode hourlyNode = rootNode.path("hourly");
             if (hourlyNode.isArray()) {
-                HourlyForecast hourlyForecasts = objectMapper.readValue(
+                List<HourlyForecast> hourlyForecasts = objectMapper.readValue(
                         hourlyNode.toString(),
                         new TypeReference<>() {}
                 );
@@ -84,7 +84,7 @@ public class WeatherClient {
             // Parsing daily forecasts
             JsonNode dailyNode = rootNode.path("daily");
             if (dailyNode.isArray()) {
-                DailyForecast dailyForecasts = objectMapper.readValue(
+                List<DailyForecast> dailyForecasts = objectMapper.readValue(
                         dailyNode.toString(),
                         new TypeReference<>() {}
                 );
@@ -94,7 +94,7 @@ public class WeatherClient {
             // Parsing weather alerts
             JsonNode alertsNode = rootNode.path("alerts");
             if (alertsNode.isArray()) {
-                WeatherAlert weatherAlerts = objectMapper.readValue(
+                List<WeatherAlert> weatherAlerts = objectMapper.readValue(
                         alertsNode.toString(),
                         new TypeReference<>() {}
                 );

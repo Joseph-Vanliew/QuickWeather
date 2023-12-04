@@ -33,7 +33,8 @@ public class WeatherService {
 
     public WeatherResponse getCompleteWeatherData(String city) {
         Coordinates coordinates = getCoordinatesForCity(city);
-        return weatherAPIClient.getWeatherData(coordinates.lat(), coordinates.lon());
+        String metric = "metric";
+        return weatherAPIClient.getWeatherData(coordinates.lat(), coordinates.lon(), metric);
     }
 }
 

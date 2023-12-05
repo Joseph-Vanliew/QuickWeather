@@ -8,7 +8,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CurrentForecast(
         long dt, // Unix timestamp for the forecast time
-        double temp, // Kalvin default
+        double temp, // Kalvin default, currently set to Fahrenheit in the client
         @JsonProperty("feels_like")
         double feelsLike, // Feels like temperature
         int pressure, // Atmospheric pressure in hPa

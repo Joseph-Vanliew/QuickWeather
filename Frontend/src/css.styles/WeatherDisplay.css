@@ -1,0 +1,55 @@
+.weather-display {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.weather-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin: 20px 0;
+    padding: 20px;
+    text-align: left;
+}
+
+.weather-card h2 {
+    color: #0170C1; /* Blue color for titles */
+    margin-bottom: 15px;
+}
+
+.weather-card p {
+    line-height: 1.6;
+    margin: 5px 0;
+}
+
+/* Specific styling for different types of weather data */
+.current-weather {
+    background-color: #AED6F1; /* Light blue for current weather */
+}
+
+.hourly-forecast {
+    background-color: #ABEBC6; /* Light green for hourly forecast */
+}
+
+.daily-forecast {
+    background-color: #FAD7A0; /* Light orange for daily forecast */
+}
+
+.weather-alerts {
+    background-color: #F5B7B1; /* Light red for weather alerts */
+}
+
+/* Media query for responsive design */
+@media (max-width: 600px) {
+    .weather-display {
+        padding: 10px;
+    }
+
+    .weather-card {
+        padding: 10px;
+        margin: 10px 0;
+    }
+}

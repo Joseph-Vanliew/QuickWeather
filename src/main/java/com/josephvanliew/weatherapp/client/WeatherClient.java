@@ -82,7 +82,7 @@ public class WeatherClient {
             }
 
             // Parsing daily forecasts
-            JsonNode dailyNode = rootNode.path("daily"); //3 day forecast
+            JsonNode dailyNode = rootNode.path("daily"); //3-day forecast
             if (dailyNode.isArray()) {
                 List<DailyForecast> dailyForecasts = objectMapper.readValue(
                         dailyNode.toString(),

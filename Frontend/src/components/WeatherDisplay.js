@@ -1,54 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CurrentWeatherCard from './CurrentWeatherCard';
 import HourlyForecastCard from './HourlyForecastCard';
 import DailyForecastCard from './DailyForecastCard';
 import WeatherAlertsCard from './WeatherAlertsCard';
+import '../css.styles/WeatherDisplay.css'; // Your CSS import
 
-import '../css.styles/WeatherDisplay.css'
-function WeatherDisplay() {
-    const [city, setCity] = useState('');
+function WeatherDisplay({ initialCity }) {
+    const [city, setCity] = useState(initialCity); // Use a new state variable for the current city
+    const [inputCity, setInputCity] = useState(''); // Reset input field when navigating to this component
     const [weatherData, setWeatherData] = useState(null);
 
-    const fetchWeatherData = () => {
-        if (!city) return; // Prevent fetching if city is not set
+    useEffect(() => {
+        if (city) {
+            fetchWeatherData(city);
+        }
+    }, [city]); // Fetch weather data when city changes
 
-        fetch(`/weather/all?city=${encodeURIComponent(city)}`)
-            .then(response => response.json())
-            .then(data => setWeatherData(data))
-            .catch(error => console.error('Error fetching weather data:', error));
+    const fetchWeatherData = async (city) => {
+        try {
+            const response = await fetch(`/weather/all?city=${encodeURIComponent(city)}`);
+            const data = await response.json();
+            setWeatherData(data);
+        } catch (error) {
+            console.error('Error fetching weather data:', error);
+        }
     };
 
     const handleCityChange = (event) => {
-        setCity(event.target.value);
+        setInputCity(event.target.value);
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        fetchWeatherData();
+        setCity(inputCity);
+        setInputCity('');
     };
 
     return (
-        <div>
-            {/* Form for entering city */}
+        <div className={"weather-display"}>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="city-input">Enter City:</label>
+                <label htmlFor="city-input">City:</label>
                 <input
                     id="city-input"
                     type="text"
-                    value={city}
+                    value={inputCity}
                     onChange={handleCityChange}
+                    placeholder="Enter new city"
                 />
                 <button type="submit">Get Weather</button>
             </form>
 
-            {/* Weather display cards, only shown if weatherData is available */}
-            {weatherData && (
-                <div className={"weather-display"}>
-                    <CurrentWeatherCard current={weatherData.current} />
+            {weatherData ? (
+                <div>
+                    <CurrentWeatherCard current={weatherData.current} city={city} />
                     <HourlyForecastCard hourly={weatherData.hourly} />
                     <DailyForecastCard daily={weatherData.daily} />
                     <WeatherAlertsCard alerts={weatherData.alerts} />
                 </div>
+            ) : (
+                <p>Loading weather data...</p>
             )}
         </div>
     );

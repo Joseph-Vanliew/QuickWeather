@@ -1,0 +1,92 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.landing-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, #ff7e5f, #feb47b);
+    font-family: 'Arial', sans-serif;
+    width: 100%;
+}
+
+.cloud {
+    background-color: #fff;
+    background-image: -webkit-linear-gradient(hsla(0,0%,0%,0), hsla(0,0%,0%,.1));
+    border-radius: 1em;
+    box-shadow: inset 0 0 0 1px hsla(0,0%,100%,.5);
+    display: inline-block;
+    height: 1em;
+    left: 50%;
+    margin-left: -1.5em;
+    position: absolute;
+    top: 50%;
+    width: 3em;
+    -webkit-filter: drop-shadow(0 2px 3px hsla(0,0%,0%,.25));
+}
+.cloud:after,
+.cloud:before {
+    background-color: #fff;
+    content: '';
+    border-radius: 100%;
+    position: absolute;
+}
+.cloud:after {
+    background-image: -webkit-linear-gradient(hsla(0,0%,0%,0) 50%, hsla(0,0%,0%,.025));
+    height: 1em;
+    right: .4em;
+    top: -.5em;
+    width: 1em;
+}
+.cloud:before {
+    background-image: -webkit-linear-gradient(hsla(0,0%,0%,0) 50%, hsla(0,0%,0%,.075));
+    height: 1.6em;
+    left: .4em;
+    top: -.75em;
+    width: 1.6em;
+}
+
+.landing-page-container h1 {
+    font-size: 5rem; /* Increased font size for title */
+    margin-bottom: 20px;
+}
+
+.landing-form {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    max-width: 300px;
+}
+
+.landing-form label,
+.landing-form input,
+.landing-form button {
+    margin-bottom: 15px; /* Slightly larger spacing */
+    font-size: 1.4rem; /* Increased font size */
+}
+
+.landing-form input {
+    padding: 15px; /* More padding for larger appearance */
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    max-width: 300px;
+}
+
+.landing-form button {
+    padding: 15px; /* More padding for larger appearance */
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.9s ease;
+}
+
+.landing-form button:hover {
+    background-color: #2563eb;
+}

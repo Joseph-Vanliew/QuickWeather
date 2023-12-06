@@ -1,19 +1,21 @@
 import React from 'react';
 
 function HourlyForecastCard({ hourly }) {
-    // Slice the hourly data to only show the first 8 hours
-    const limitedHourlyData = hourly?.slice(0, 8);
+    const limitedHourlyData = hourly?.slice(0, 5);
+    const formatHour = (hour) => {
+        const hour12 = hour % 12 || 12; // Convert 0-23 hour to 12-hour format
+        const amPm = hour < 12 ? 'AM' : 'PM';
+        return `${hour12}${":00"}${amPm}`;
+    };
 
     return (
-        <div className={"weather-card hourly-forecast"}>
-            <h2>Hourly (Next 8 Hours)</h2>
+        <div className={" card weather-header"}>
+            <h2>Hourly</h2>
             {limitedHourlyData?.map((forecast, index) => (
-                <div key={index}>
-                    <p>Time: {new Date(forecast.dt * 1000).toLocaleTimeString()}</p>
-                    <p>Temperature: {Math.round(forecast.temp)}°F</p>
-                    <p>Humidity: {forecast.humidity}%</p>
-                    <p>Precipitation Chance: {forecast.pop * 100}%</p>
-                    {/* Will add additional fields from HourlyForecast later */}
+                <div key={index} className={"hour"}>
+                    <p>{formatHour(new Date(forecast.dt * 1000).getHours())}</p>
+                    <p>Temp: {Math.round(forecast.temp)}°</p>
+                    <p>Rain%: {Math.round(forecast.pop * 100)}%</p>
                 </div>
             ))}
         </div>

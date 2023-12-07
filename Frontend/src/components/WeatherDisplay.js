@@ -3,7 +3,7 @@ import CurrentWeatherCard from './CurrentWeatherCard';
 import HourlyForecastCard from './HourlyForecastCard';
 import DailyForecastCard from './DailyForecastCard';
 import WeatherAlertsCard from './WeatherAlertsCard';
-import '../css.styles/WeatherDisplay.css'; // Your CSS import
+import '../css.styles/WeatherDisplay.css';
 
 function WeatherDisplay({ initialCity }) {
     const [city, setCity] = useState(initialCity); // Use a new state variable for the current city

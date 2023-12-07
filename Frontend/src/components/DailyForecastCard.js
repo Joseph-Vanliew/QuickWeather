@@ -1,6 +1,7 @@
 import React from 'react';
 
 function DailyForecastCard({ daily }) {
+
     const limitedDailyData = daily?.slice(0, 5);
 
     return (

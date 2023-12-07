@@ -2,6 +2,7 @@ import React from 'react';
 
 function HourlyForecastCard({ hourly }) {
     const limitedHourlyData = hourly?.slice(0, 5);
+
     const formatHour = (hour) => {
         const hour12 = hour % 12 || 12; // Convert 0-23 hour to 12-hour format
         const amPm = hour < 12 ? 'AM' : 'PM';

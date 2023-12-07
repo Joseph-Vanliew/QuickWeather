@@ -1,0 +1,195 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GeocodingClient</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.josephvanliew.weatherapp.client</a>
+</div>
+
+<h1>Coverage Summary for Class: GeocodingClient (com.josephvanliew.weatherapp.client)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GeocodingClient</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    3.8%
+  </span>
+  <span class="absValue">
+    (1/26)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GeocodingClient$MockitoMock$1122892494</td>
+  </tr>
+  <tr>
+    <td class="name">GeocodingClient$MockitoMock$1122892494$auxiliary$42JSKV5d</td>
+  </tr>
+  <tr>
+    <td class="name">GeocodingClient$MockitoMock$1122892494$auxiliary$MeP3MEvI</td>
+  </tr>
+  <tr>
+    <td class="name">GeocodingClient$MockitoMock$1122892494$auxiliary$skKwqZRt</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    3.8%
+  </span>
+  <span class="absValue">
+    (1/26)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.josephvanliew.weatherapp.client;
+&nbsp;import com.fasterxml.jackson.databind.JsonNode;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import com.josephvanliew.weatherapp.customexceptions.FailedToFetchCityNameException;
+&nbsp;import com.josephvanliew.weatherapp.model.Coordinates;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.net.URI;
+&nbsp;import java.net.URLEncoder;
+&nbsp;import java.net.http.HttpClient;
+&nbsp;import java.net.http.HttpRequest;
+&nbsp;import java.net.http.HttpResponse;
+&nbsp;import java.nio.charset.StandardCharsets;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Component
+<b class="nc">&nbsp;public class GeocodingClient {</b>
+&nbsp;
+&nbsp;    @Value(&quot;${WEATHER_API_KEY}&quot;)
+&nbsp;    private String API_KEY;
+&nbsp;    @Value(&quot;${GEOCODING_BASE_URL}&quot;)
+&nbsp;    private String BASE_URL;
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(GeocodingClient.class);</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;    private final ObjectMapper objectMapper = new ObjectMapper();</b>
+&nbsp;
+&nbsp;    public Optional&lt;Coordinates&gt; getCoordinatesForCity(String city) throws FailedToFetchCityNameException {
+<b class="nc">&nbsp;        HttpClient client = HttpClient.newHttpClient();</b>
+<b class="nc">&nbsp;        String url = String.format(&quot;%s?q=%s&amp;limit=1&amp;appid=%s&quot;,</b>
+&nbsp;                BASE_URL,
+<b class="nc">&nbsp;                URLEncoder.encode(city, StandardCharsets.UTF_8),</b>
+&nbsp;                API_KEY);
+&nbsp;
+<b class="nc">&nbsp;        HttpRequest request = HttpRequest.newBuilder()</b>
+<b class="nc">&nbsp;                .uri(URI.create(url))</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;
+&nbsp;        try {
+<b class="nc">&nbsp;            HttpResponse&lt;String&gt; response = client.send(request, HttpResponse.BodyHandlers.ofString());</b>
+<b class="nc">&nbsp;            if (response.statusCode() == 200) {</b>
+<b class="nc">&nbsp;                return parseCoordinates(response.body());</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                logger.error(&quot;Failed to fetch coordinates for city: &quot; + city + &quot;. Status code: &quot; + response.statusCode() + &quot;, Response: &quot; + response.body());</b>
+<b class="nc">&nbsp;                throw new FailedToFetchCityNameException(&quot;API call failed with status code: &quot; + response.statusCode());</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<b class="nc">&nbsp;            throw new FailedToFetchCityNameException(&quot;Could not find the City from the given coordinates&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private Optional&lt;Coordinates&gt; parseCoordinates(String responseBody) {
+&nbsp;        try {
+<b class="nc">&nbsp;            JsonNode rootNode = objectMapper.readTree(responseBody);</b>
+<b class="nc">&nbsp;            if (rootNode.isArray() &amp;&amp; !rootNode.isEmpty()) {</b>
+&nbsp;
+<b class="nc">&nbsp;                JsonNode firstElement = rootNode.get(0);</b>
+<b class="nc">&nbsp;                double lat = firstElement.path(&quot;lat&quot;).asDouble();</b>
+<b class="nc">&nbsp;                double lon = firstElement.path(&quot;lon&quot;).asDouble();</b>
+<b class="nc">&nbsp;                return Optional.of(new Coordinates(lat, lon));</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (IOException e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error parsing coordinates from response body: &quot; + responseBody);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return Optional.empty();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-06 20:22</div>
+</div>
+</body>
+</html>

@@ -46,7 +46,16 @@ public class WeatherClient {
             if (response.statusCode() == 200) {
                 return parseWeatherResponse(response.body(), lat, lon);
             } else {
-                logger.error("Failed to fetch the weather data for the given Lat: " + lat + ", and longitude: " + lon + ", status code: " + response.statusCode() + ", response body: " + response.body());
+                logger.error(
+                        "Failed to fetch the weather data for the given Lat: "
+                        + lat
+                        + ", and longitude: "
+                        + lon
+                        + ", status code: "
+                        + response.statusCode()
+                        + ", response body: "
+                        + response.body()
+                );
             }
         } catch (IOException | InterruptedException e) {
             logger.error("Error occurred while calling Weather API", e);
@@ -82,7 +91,7 @@ public class WeatherClient {
             }
 
             // Parsing daily forecasts
-            JsonNode dailyNode = rootNode.path("daily"); //3-day forecast
+            JsonNode dailyNode = rootNode.path("daily"); //5-day forecast
             if (dailyNode.isArray()) {
                 List<DailyForecast> dailyForecasts = objectMapper.readValue(
                         dailyNode.toString(),

@@ -1,0 +1,299 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > WeatherClient</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.josephvanliew.weatherapp.client</a>
+</div>
+
+<h1>Coverage Summary for Class: WeatherClient (com.josephvanliew.weatherapp.client)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">WeatherClient</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.2%
+  </span>
+  <span class="absValue">
+    (1/45)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">WeatherClient$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">WeatherClient$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">WeatherClient$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">WeatherClient$MockitoMock$1489694194</td>
+  </tr>
+  <tr>
+    <td class="name">WeatherClient$MockitoMock$1489694194$auxiliary$56gcuw5h</td>
+  </tr>
+  <tr>
+    <td class="name">WeatherClient$MockitoMock$1489694194$auxiliary$Ce281YEk</td>
+  </tr>
+  <tr>
+    <td class="name">WeatherClient$MockitoMock$1489694194$auxiliary$TFUIYtzB</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (1/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.1%
+  </span>
+  <span class="absValue">
+    (1/48)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.josephvanliew.weatherapp.client;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.core.JsonProcessingException;
+&nbsp;import com.fasterxml.jackson.core.type.TypeReference;
+&nbsp;import com.fasterxml.jackson.databind.JsonNode;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import com.josephvanliew.weatherapp.controller.WeatherResponse;
+&nbsp;import com.josephvanliew.weatherapp.customexceptions.WeatherDataFetchException;
+&nbsp;import com.josephvanliew.weatherapp.customexceptions.WeatherParserException;
+&nbsp;import com.josephvanliew.weatherapp.model.CurrentForecast;
+&nbsp;import com.josephvanliew.weatherapp.model.DailyForecast;
+&nbsp;import com.josephvanliew.weatherapp.model.HourlyForecast;
+&nbsp;import com.josephvanliew.weatherapp.model.WeatherAlert;
+&nbsp;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;import java.io.IOException;
+&nbsp;import java.net.URI;
+&nbsp;import java.net.http.HttpClient;
+&nbsp;import java.net.http.HttpRequest;
+&nbsp;import java.net.http.HttpResponse;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;
+&nbsp;@Component
+<b class="nc">&nbsp;public class WeatherClient {</b>
+&nbsp;
+&nbsp;    @Value(&quot;${WEATHER_API_KEY}&quot;)
+&nbsp;    private String API_KEY;
+&nbsp;    @Value(&quot;${WEATHER_BASE_URL}&quot;)
+&nbsp;    private String BASE_URL;
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(WeatherClient.class);</b>
+&nbsp;
+&nbsp;    public WeatherResponse getWeatherData(double lat, double lon, String metric) throws WeatherDataFetchException {
+<b class="nc">&nbsp;        HttpClient client = HttpClient.newHttpClient();</b>
+<b class="nc">&nbsp;        String url = BASE_URL + &quot;?lat=&quot; + lat + &quot;&amp;lon=&quot; + lon + &quot;&amp;units=&quot; + metric + &quot;&amp;appid=&quot; +  API_KEY;</b>
+<b class="nc">&nbsp;        HttpRequest request = HttpRequest.newBuilder()</b>
+<b class="nc">&nbsp;                .uri(URI.create(url))</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            HttpResponse&lt;String&gt; response = client.send(request, HttpResponse.BodyHandlers.ofString());</b>
+<b class="nc">&nbsp;            if (response.statusCode() == 200) {</b>
+<b class="nc">&nbsp;                return parseWeatherResponse(response.body(), lat, lon);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                logger.error(</b>
+&nbsp;                        &quot;Failed to fetch the weather data for the given Lat: &quot;
+&nbsp;                        + lat
+&nbsp;                        + &quot;, and longitude: &quot;
+&nbsp;                        + lon
+&nbsp;                        + &quot;, status code: &quot;
+<b class="nc">&nbsp;                        + response.statusCode()</b>
+&nbsp;                        + &quot;, response body: &quot;
+<b class="nc">&nbsp;                        + response.body()</b>
+&nbsp;                );
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (IOException | InterruptedException e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error occurred while calling Weather API&quot;, e);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private WeatherResponse parseWeatherResponse(String responseBody, double lat, double lon) throws WeatherParserException {
+<b class="nc">&nbsp;        ObjectMapper objectMapper = new ObjectMapper();</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            JsonNode rootNode = objectMapper.readTree(responseBody);</b>
+&nbsp;
+<b class="nc">&nbsp;            WeatherResponse weatherResponse = new WeatherResponse();</b>
+&nbsp;
+<b class="nc">&nbsp;            weatherResponse.setLat(lat);</b>
+<b class="nc">&nbsp;            weatherResponse.setLon(lon);</b>
+&nbsp;
+&nbsp;            // Parsing current weather
+<b class="nc">&nbsp;            JsonNode currentNode = rootNode.path(&quot;current&quot;);</b>
+<b class="nc">&nbsp;            if (!currentNode.isMissingNode()) {</b>
+<b class="nc">&nbsp;                CurrentForecast currentWeather = objectMapper.treeToValue(currentNode, CurrentForecast.class);</b>
+<b class="nc">&nbsp;                weatherResponse.setCurrent(currentWeather);</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            // Parsing hourly forecasts
+<b class="nc">&nbsp;            JsonNode hourlyNode = rootNode.path(&quot;hourly&quot;);</b>
+<b class="nc">&nbsp;            if (hourlyNode.isArray()) {</b>
+<b class="nc">&nbsp;                List&lt;HourlyForecast&gt; hourlyForecasts = objectMapper.readValue(</b>
+<b class="nc">&nbsp;                        hourlyNode.toString(),</b>
+<b class="nc">&nbsp;                        new TypeReference&lt;&gt;() {}</b>
+&nbsp;                );
+<b class="nc">&nbsp;                weatherResponse.setHourly(hourlyForecasts);</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            // Parsing daily forecasts
+<b class="nc">&nbsp;            JsonNode dailyNode = rootNode.path(&quot;daily&quot;); //5-day forecast</b>
+<b class="nc">&nbsp;            if (dailyNode.isArray()) {</b>
+<b class="nc">&nbsp;                List&lt;DailyForecast&gt; dailyForecasts = objectMapper.readValue(</b>
+<b class="nc">&nbsp;                        dailyNode.toString(),</b>
+<b class="nc">&nbsp;                        new TypeReference&lt;&gt;() {}</b>
+&nbsp;                );
+<b class="nc">&nbsp;                weatherResponse.setDaily(dailyForecasts);</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            // Parsing weather alerts
+<b class="nc">&nbsp;            JsonNode alertsNode = rootNode.path(&quot;alerts&quot;); //weather alerts/advisories</b>
+<b class="nc">&nbsp;            if (alertsNode.isArray()) {</b>
+<b class="nc">&nbsp;                List&lt;WeatherAlert&gt; weatherAlerts = objectMapper.readValue(</b>
+<b class="nc">&nbsp;                        alertsNode.toString(),</b>
+<b class="nc">&nbsp;                        new TypeReference&lt;&gt;() {}</b>
+&nbsp;                );
+<b class="nc">&nbsp;                weatherResponse.setAlerts(weatherAlerts);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            return weatherResponse;</b>
+<b class="nc">&nbsp;        } catch (JsonProcessingException e) {</b>
+<b class="nc">&nbsp;            logger.error(&quot;Error occurred while parsing Weather API response: &quot;, e);</b>
+<b class="nc">&nbsp;            throw new WeatherParserException(&quot;Failed to parse weather data: &quot;, e);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-12-06 20:22</div>
+</div>
+</body>
+</html>
